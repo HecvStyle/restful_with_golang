@@ -4,8 +4,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"github.com/gorilla/mux"
+
 	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 )
 
 func mainLogic(w http.ResponseWriter, r *http.Request) {
