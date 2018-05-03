@@ -30,4 +30,14 @@ func main() {
 	}
 	statement.Exec()
 
+	statement, _ = db.Prepare("insert into books (name, author, isbn) values(?,?,?)")
+	statement.Exec("A table of two cities", "Charles Dikends", 140430547)
+	log.Println("Inserted the book into database!")
+
+	rows, _ := db.Query("select id, name, author frome books")
+	var tempBook Book
+	for rows.Next() {
+		rows.Scan(&tempBook.id, &tempBook.name, &tempBook.author)
+		log.Printf("ID:%d ,Bool:%s,Author:%s\n", tempBook.id, tempBook.name, tempBook.author)
+	}
 }
