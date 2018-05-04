@@ -1,41 +1,42 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	"log"
 	jsonparse "encoding/json"
-	"os"
 	"io/ioutil"
-	"github.com/gorilla/rpc/json"
+	"log"
 	"net/http"
+	"os"
+
+	"github.com/gorilla/mux"
+	"github.com/gorilla/rpc"
+	"github.com/gorilla/rpc/json"
 )
 
-
-type Args struct{
+type Args struct {
 	Id string
 }
 
-type Book struct{
-	Id string '"json:string,omitempty"'
-	Name string '"json:name,omitempty"'
-	Author string '"json:author,omitempty"'
+type Book struct {
+	Id     string "json:string,omitempty"
+	Name   string "json:name,omitempty"
+	Author string "json:author,omitempty"
 }
 
 type JSONServer struct{}
 
-func (t *JSONServer) GiveBookDetail(r *http.Request, args *Args, reply *Book) error{
+func (t *JSONServer) GiveBookDetail(r *http.Request, args *Args, reply *Book) error {
 	var books []Book
 	raw, readerr := ioutil.ReadFile("./books.json")
-	if readerr != nil{
-		log.Println("error:",readerr)
+	if readerr != nil {
+		log.Println("error:", readerr)
 		os.Exit(1)
 	}
-	marshalerr := jsonparse.Unmashal(raw, &books)
-	if marshalerr != nil{
-		log.Println("error:",marshalerr)
+	marshalerr := jsonparse.Unmarshal(raw, &books)
+	if marshalerr != nil {
+		log.Println("error:", marshalerr)
 	}
-	for _, book := range books{
-		if book.Id == args.Id{
+	for _, book := range books {
+		if book.Id == args.Id {
 			*reply = book
 			break
 		}
@@ -46,9 +47,9 @@ func (t *JSONServer) GiveBookDetail(r *http.Request, args *Args, reply *Book) er
 
 func main() {
 	s := rpc.NewServer()
-	s.RegisterCodec(json.NewCodec(),"application/json")
-	s.RegisterService(new(JSONServer),"")
+	s.RegisterCodec(json.NewCodec(), "application/json")
+	s.RegisterService(new(JSONServer), "")
 	r := mux.NewRouter()
-	r.Handle("/rpc",s)
-	http.ListenAndServe(":123",r)
+	r.Handle("/rpc", s)
+	http.ListenAndServe(":1234", r)
 }
