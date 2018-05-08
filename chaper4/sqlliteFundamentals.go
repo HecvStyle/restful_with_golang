@@ -34,10 +34,20 @@ func main() {
 	statement.Exec("A table of two cities", "Charles Dikends", 140430547)
 	log.Println("Inserted the book into database!")
 
-	rows, _ := db.Query("select id, name, author frome books")
+	//query
+	rows, _ := db.Query("select id, name, author from books")
 	var tempBook Book
 	for rows.Next() {
 		rows.Scan(&tempBook.id, &tempBook.name, &tempBook.author)
-		log.Printf("ID:%d ,Bool:%s,Author:%s\n", tempBook.id, tempBook.name, tempBook.author)
+		log.Printf("ID:%d ,Book:%s,Author:%s\n", tempBook.id, tempBook.name, tempBook.author)
 	}
+	// update
+	statement, _ = db.Prepare("update books set name = ? where id = ?")
+	statement.Exec("The tale of two cities", 1)
+	log.Println("successfully update the book in database!")
+
+	// delete
+	statement, _ = db.Prepare("delete from books where id =?")
+	statement.Exec(1)
+	log.Println("successfully delete the book in database!")
 }
