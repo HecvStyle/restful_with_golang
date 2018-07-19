@@ -90,7 +90,7 @@ func main() {
 	if err != nil {
 		log.Println("Driver creation failed!")
 	}
-	dbutils.Initialize(DB)
+	dbutils.Initialize(DB)// 初始化一个数据库
 	wsContainer := restful.NewContainer()
 	wsContainer.Router(restful.CurlyRouter{})
 	t := TrainResource{}
